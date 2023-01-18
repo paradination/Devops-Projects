@@ -41,6 +41,18 @@ wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key 
 sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt update
 sudo apt install jenkins -y
+sudo echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+
+[Install]
+sudo apt install python3 -y
+sudo apt install python-pip3 -y
+pip3 install boto boto3 ansible -y
+sudo useradd ansadmin
+sudo echo ansadmin:ansadmin | chpasswd
+sudo sed -i "s/.*#host_key_checking = False/host_key_checking = False/g" /etc/ansible/ansible.cfg
+sudo sed -i "s/.*#enable_plugins = host_list, virtualbox, yaml, constructed/enable_plugins = aws_ec2/g" /etc/ansible/ansible.cfg
+sudo ansible-galaxy collection install amazon.aws -y
 
 
 [Install]
